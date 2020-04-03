@@ -50,6 +50,7 @@ const questions = [{
 ];
 
 const writeFileAsync = util.promisify(fs.writeFile);
+const appendFileAsync = util.promisify(fs.appendFile);
 
 function promptUser() {
     return inquirer.prompt([
@@ -104,37 +105,19 @@ function promptUser() {
 promptUser()
     .then(function (answers) {
         const md = generateMD(answers);
-        return writeFileAsync("READMEgen.md", md);
-    })
-    .then(function(){
-        const {person} = axios.get(
+        console.log(answers)
+        writeFileAsync("READMEgen.md", md);
+        axios.get(
             `https://api.github.com/users/${answers.github}`
-        )
-        console.log(person);
-        
+        ).then(function (results) {
+            console.log(results);
+            const appendMD = appendContact(results)
+            appendFileAsync("READMEgen.md", appendMD)
+        })
     })
     .catch(function (err) {
         console.log(err);
-
     });
-
-
-
-//     const queryUrl = `https://api.github.com/users/${github}`;
-//     axios.get(queryUrl)
-// })
-//     .then(function (results) {
-//         const avatar = results.data.avatar_url;
-//         const email = results.data.email;
-//     })
-//     .then(function () {
-
-//         return writeFileAsync${ }
-//     })
-
-
-
-
 
 function generateMD(answers) {
     return `
@@ -178,12 +161,12 @@ ${answers.contrib}
 ${answers.test}`
 };
 
-function generateContact() {
+function appendContact(results) {
     return `
 
 <a name="contact"></a>
 
 ## Contact
-![alt text](${avatar})
-[Email me @ ${email}](mailto:${email})`
+![alt text](${results.data.avatar_url})
+[Email me @ ${results.data.email}](mailto:${results.data.email})`
 };
