@@ -51,33 +51,98 @@ const questions = [{
 
 const writeFileAsync = util.promisify(fs.writeFile);
 
-inquirer
-    .prompt(questions)
+function promptUser() {
+    return inquirer.prompt([
+        {
+            type: 'input',
+            message: 'What is your name?',
+            name: 'name'
+        },
+        {
+            type: 'input',
+            message: 'What is your github username?',
+            name: 'github'
+        },
+        {
+            type: 'input',
+            message: 'What is the title of your project?',
+            name: 'title'
+        },
+        {
+            type: 'input',
+            message: 'Please describe your project.',
+            name: 'description'
+        },
+        {
+            type: 'input',
+            message: 'Please give any installation instructions.',
+            name: 'installation'
+        },
+        {
+            type: 'input',
+            message: 'Please give usage instructions.',
+            name: 'usage'
+        },
+        {
+            type: 'input',
+            message: 'Is there any pertinent licensing instructions?',
+            name: 'license'
+        },
+        {
+            type: 'input',
+            message: 'List all contributors.',
+            name: 'cotrib'
+        },
+        {
+            type: 'input',
+            message: 'Provide any information on testing.',
+            name: 'test'
+        },
+    ])
+};
+
+promptUser()
     .then(function (answers) {
+        const md = generateMD(answers);
+        return writeFileAsync("READMEgen.md", md);
+    })
+    .then(function(){
+        const {person} = axios.get(
+            `https://api.github.com/users/${answers.github}`
+        )
+        console.log(person);
         
-        const queryUrl = `https://api.github.com/users/${github}`;
-        axios.get(queryUrl)
     })
-    .then(function (results) {
-        const avatar = results.data.avatar_url;
-        const email = results.data.email;
-    })
-    .then(function() {
-        
-        return writeFileAsync${}
-    })
+    .catch(function (err) {
+        console.log(err);
+
+    });
 
 
 
- 
+//     const queryUrl = `https://api.github.com/users/${github}`;
+//     axios.get(queryUrl)
+// })
+//     .then(function (results) {
+//         const avatar = results.data.avatar_url;
+//         const email = results.data.email;
+//     })
+//     .then(function () {
 
-function generateMD() {
+//         return writeFileAsync${ }
+//     })
+
+
+
+
+
+function generateMD(answers) {
     return `
- # ${response.title}  [![made-with-Markdown](https://img.shields.io/badge/Made%20with-Markdown-1f425f.svg)](http://commonmark.org)
+ # ${answers.title}  [![made-with-Markdown](https://img.shields.io/badge/Made%20with-Markdown-1f425f.svg)](http://commonmark.org)
 
 
 ## Description
-${response.description}
+${answers.description}
 
 ## Table of Contents
 1. [Installation](#installation)
@@ -90,30 +155,30 @@ ${response.description}
 <a name="installation"></a>
 
 ## Installation
-${response.installation}
+${answers.installation}
 
 <a name="usage"></a>
 
 ## Usage
-${response.usage}
+${answers.usage}
 
 <a name="license"></a>
 
 ## License
-${response.license}
+${answers.license}
 
 <a name="contributors"></a>
 
 ## Contributors
-${response.contrib}
+${answers.contrib}
 
 <a name="tests"></a>
 
 ## Tests
-${response.test}`
+${answers.test}`
 };
 
-function generateContact(){
+function generateContact() {
     return `
 
 <a name="contact"></a>
@@ -122,4 +187,3 @@ function generateContact(){
 ![alt text](${avatar})
 [Email me @ ${email}](mailto:${email})`
 };
-
