@@ -1,4 +1,5 @@
-# ${response.title}
+# ${response.title}  [![made-with-Markdown](https://img.shields.io/badge/Made%20with-Markdown-1f425f.svg)](http://commonmark.org)
+
 
 ## Description
 ${response.description}
@@ -16,27 +17,28 @@ ${response.description}
 ## Installation
 ${response.installation}
 
-<a name=""></a>
+<a name="usage"></a>
 
 ## Usage
 ${response.usage}
 
-<a name=""></a>
+<a name="license"></a>
 
 ## License
 ${response.license}
 
-<a name=""></a>
+<a name="contributors"></a>
 
 ## Contributors
 ${response.contrib}
 
-<a name=""></a>
+<a name="tests"></a>
 
 ## Tests
 ${response.test}
 
-<a name=""></a>
+<a name="contact"></a>
 
 ## Contact
-${response.}
+![alt text](${avatar})
+[Email me @ ${email}](mailto:${email})
